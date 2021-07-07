@@ -29,8 +29,9 @@ outlier datapoints.  Resulting centers are solution to multiple integer program.
 from __future__ import absolute_import, division, print_function
 
 import numpy as np
-from samplers.sampling_def import SamplingMethod
 from sklearn.metrics import pairwise_distances
+
+from patchcore.samplers.sampling_def import SamplingMethod
 
 
 class KCenterGreedy(SamplingMethod):
