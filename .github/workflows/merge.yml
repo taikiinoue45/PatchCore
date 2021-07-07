@@ -1,0 +1,103 @@
+name: merge
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - assets/**
+
+jobs:
+  docker-build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        run: |
+          git clone https://github.com/$GITHUB_REPOSITORY.git $GITHUB_WORKSPACE
+          git checkout $GITHUB_SHA
+
+      - name: Docker build and push
+        uses: docker/build-push-action@v2
+        with:
+          file: docker/Dockerfile
+          push: true
+          tags: taikiinoue45/mvtec:patchcore
+          no-cache: true
+
+      - name: Clean up
+        if: always()
+        run: ls -A1 | xargs rm -rf
+
+  pytest:
+    needs: [docker-build]
+    runs-on: self-hosted
+    container:
+      image: taikiinoue45/mvtec:patchcore
+
+    steps:
+      - name: Test checksum
+        run: pytest -v tests/test_checksum.py
+        working-directory: /app/PatchCore
+
+      - name: Test coverage
+        run: pytest -v --cov=patchcore --cov-report=xml tests/test_coverage.py
+        working-directory: /app/PatchCore
+
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./coverage.xml
+          name: PatchCore
+          fail_ci_if_error: true
+          working-directory: /app/PatchCore
+
+      - name: Clean up
+        if: always()
+        run: ls -A1 | xargs rm -rf
+
+  run-experiments:
+    needs: [docker-build, pytest]
+    runs-on: self-hosted
+    container:
+      image: taikiinoue45/mvtec:patchcore
+
+    env:
+      DATABRICKS_HOST: $${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: $${{ secrets.DATABRICKS_TOKEN }}
+
+    steps:
+      - name: Checkout
+        run: git clone https://$GITHUB_ACTOR:$${{ secrets.REPO_ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY $GITHUB_WORKSPACE
+
+      - name: Run experiments
+        run: |
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_bottle params.category=bottle
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_cable params.category=cable
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_capsule params.category=capsule
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_carpet params.category=carpet
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_grid params.category=grid
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_hazelnut params.category=hazelnut
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_leather params.category=leather
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_metal_nut params.category=metal_nut
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_pill params.category=pill
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_screw params.category=screw
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_tile params.category=tile
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_toothbrush params.category=toothbrush
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_transistor params.category=transistor
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_wood params.category=wood
+          python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_zipper params.category=zipper
+
+      - name: Git add, commit, and push
+        run: |
+          mv outputs/*/*/*.gif assets/
+          mv outputs/*/*/*_roc_curve.csv assets/
+          mv outputs/*/*/*_pro_curve.csv assets/
+          git config --local user.name "taikiinoue45"
+          git config --local user.email "taikiinoue45@gmail.com"
+          git add assets/*
+          git commit -m "Update assets/ by github actions"
+          git push origin main
+
+      - name: Clean up
+        if: always()
+        run: ls -A1 | xargs rm -rf
