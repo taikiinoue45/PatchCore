@@ -33,21 +33,21 @@ jobs:
       image: taikiinoue45/mvtec:sandbox
 
     steps:
-      # - name: Test checksum
-      #   run: pytest -v tests/test_checksum.py
-      #   working-directory: /app/PatchCore
+      - name: Test checksum
+        run: pytest -v tests/test_checksum.py
+        working-directory: /app/PatchCore
 
-      # - name: Test coverage
-      #   run: pytest -v --cov=patchcore --cov-report=xml tests/test_coverage.py
-      #   working-directory: /app/PatchCore
+      - name: Test coverage
+        run: pytest -v --cov=patchcore --cov-report=xml tests/test_coverage.py
+        working-directory: /app/PatchCore
 
-      # - name: Upload coverage to codecov
-      #   uses: codecov/codecov-action@v1
-      #   with:
-      #     file: ./coverage.xml
-      #     name: PatchCore
-      #     fail_ci_if_error: true
-      #     working-directory: /app/PatchCore
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          name: PatchCore
+          fail_ci_if_error: true
+          working-directory: /app/PatchCore
 
       - name: Clean up
         if: always()
@@ -64,16 +64,6 @@ jobs:
       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
     steps:
-      - name: Checkout
-        run: |
-          git clone https://github.com/$GITHUB_REPOSITORY.git $GITHUB_WORKSPACE
-          git checkout $GITHUB_SHA
-
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-      #   with:
-      #     sudo: false
-
       - name: Run experiments
         run: |
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_bottle params.category=bottle
@@ -91,6 +81,7 @@ jobs:
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_transistor params.category=transistor
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_wood params.category=wood
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_zipper params.category=zipper
+        working-directory: /app/PatchCore
 
       - name: Clean up
         if: always()
