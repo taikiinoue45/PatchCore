@@ -10,7 +10,9 @@ jobs:
 
     steps:
       - name: Checkout
-        run: git clone --branch v0.0.0 https://github.com/$GITHUB_REPOSITORY.git $GITHUB_WORKSPACE
+        run: |
+          git clone https://github.com/$GITHUB_REPOSITORY.git $GITHUB_WORKSPACE
+          git checkout $GITHUB_SHA
 
       - name: Docker build and push
         uses: docker/build-push-action@v2
