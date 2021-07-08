@@ -4,21 +4,22 @@ import hashlib
 def test_checksum() -> None:
 
     file_path_list = [
-        "run.py",
-        "tests/test_coverage.py",
+        ".github/workflows/create-release.yml",
+        ".github/workflows/dev.yml",
         ".github/workflows/format-python.yml",
         ".github/workflows/format-yaml.yml",
-        ".github/workflows/merge.yml",
-        ".github/workflows/pull-request.yml",
+        ".github/workflows/main.yml",
+        "run.py",
+        "tests/test_coverage.py",
     ]
 
     checksum_list = [
-        "04e248ab755666004e01a596ccdd9729e70609b9a9944a613e6dff5909e9ab81",
-        "a619c475d0ae8dfd4d41764ff79cd0e78fd86acbc50c8dfdb372908506995483",
+        "be71018b6c2b6669fa5b6a0f7229c6e9184b1937c46e20490bd2efeece3b069c",
+        "e973de739342b41c45c85b4443bd24ec6ec09f4873eed13edc9da5e48673381a",
         "981bd32ad4febe14a44c1c7a0a00245c747373f39d6e22884f80f018bebc68c8",
         "e18032c3c704dc1a391d72cf8bded1c98b0dffcc80d00e84f5a78daf53e4cc0f",
-        "0e8ede1867756b4ce214a05d21e8b0448f742e90f0e8d29c968f905a20e57085",
-        "9d3f18de6c799ab9d11fa9030ab7e32e4d0325b13e5437f5b3ed09113246b5a3",
+        "2d11abd5a160f01a7ff286472a82c5991d986f2b8032950be3d120e9a6ec4634",
+        "e85e8a7170864332c146c6b50c699b79e0ae934f1b4597f130798aca589c56f1",
     ]
 
     for file_path, correct_checksum in zip(file_path_list, checksum_list):
