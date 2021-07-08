@@ -51,4 +51,3 @@ class SamplingMethod(object):
 
     def to_dict(self):
         return None
-
