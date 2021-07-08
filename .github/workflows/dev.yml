@@ -64,6 +64,11 @@ jobs:
       DATABRICKS_TOKEN: $${{ secrets.DATABRICKS_TOKEN }}
 
     steps:
+      - name: Checkout
+        run: |
+          git clone https://github.com/$GITHUB_REPOSITORY.git $GITHUB_WORKSPACE
+          git checkout $GITHUB_SHA
+
       - name: Run experiments
         run: |
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_bottle params.category=bottle
