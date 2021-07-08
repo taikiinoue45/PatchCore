@@ -69,10 +69,10 @@ jobs:
           git clone https://github.com/$GITHUB_REPOSITORY.git $GITHUB_WORKSPACE
           git checkout $GITHUB_SHA
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          sudo: false
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     sudo: false
 
       - name: Run experiments
         run: |
