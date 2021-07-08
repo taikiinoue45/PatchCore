@@ -86,7 +86,6 @@ jobs:
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_transistor params.category=transistor
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_wood params.category=wood
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/sandbox params.run_name=PatchCore_zipper params.category=zipper
-        working-directory: /app/PatchCore
 
       - name: Clean up
         if: always()
