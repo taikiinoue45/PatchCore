@@ -69,8 +69,8 @@ dataloader:
   train:
     name: torch.utils.data - DataLoader
     args:
-      batch_size: 32
-      num_workers: 8
+      batch_size: 4
+      num_workers: 4
       pin_memory: true
       shuffle: true
   test:
