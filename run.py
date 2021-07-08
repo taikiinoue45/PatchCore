@@ -20,6 +20,7 @@ sys.argv.pop(1)
 @hydra.main(config_path=config_path, config_name=config_name)
 def main(cfg: DictConfig) -> None:
 
+    print(cfg)
     mlflow.set_tracking_uri(cfg.params.tracking_uri)
     mlflow.set_experiment(cfg.params.experiment_name)
     mlflow.start_run(run_name=cfg.params.run_name)

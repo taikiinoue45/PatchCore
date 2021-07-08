@@ -33,9 +33,9 @@ jobs:
       image: taikiinoue45/mvtec:sandbox
 
     steps:
-      - name: Test checksum
-        run: pytest -v tests/test_checksum.py
-        working-directory: /app/PatchCore
+      # - name: Test checksum
+      #   run: pytest -v tests/test_checksum.py
+      #   working-directory: /app/PatchCore
 
       - name: Test coverage
         run: pytest -v --cov=patchcore --cov-report=xml tests/test_coverage.py
