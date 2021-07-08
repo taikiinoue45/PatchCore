@@ -80,4 +80,3 @@ dataloader:
       num_workers: 1
       pin_memory: true
       shuffle: true
-
