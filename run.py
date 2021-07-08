@@ -21,13 +21,6 @@ sys.argv.pop(1)
 def main(cfg: DictConfig) -> None:
 
     mlflow.set_tracking_uri(cfg.params.tracking_uri)
-
-    print(cfg)
-    print(mlflow.__version__)
-    print(mlflow.tracking.get_tracking_uri())
-    print(cfg.params.tracking_uri)
-    print(cfg.params.experiment_name)
-
     mlflow.set_experiment(cfg.params.experiment_name)
     mlflow.start_run(run_name=cfg.params.run_name)
     mlflow.log_params(cfg.params)
