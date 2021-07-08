@@ -1,4 +1,4 @@
-name: merge
+name: main
 
 on:
   push:
