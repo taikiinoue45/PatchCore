@@ -1,8 +1,8 @@
-name: pull_request
+name: dev
 
 on:
-  pull_request:
-    branches: [main]
+  push:
+    branches: [v*.*.*]
 
 jobs:
   docker-build:
@@ -60,8 +60,8 @@ jobs:
       image: taikiinoue45/mvtec:sandbox
 
     env:
-      DATABRICKS_HOST: $${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_TOKEN: $${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
     steps:
       - name: Run experiments

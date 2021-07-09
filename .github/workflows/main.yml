@@ -1,4 +1,4 @@
-name: merge
+name: main
 
 on:
   push:
@@ -66,9 +66,6 @@ jobs:
       DATABRICKS_TOKEN: $${{ secrets.DATABRICKS_TOKEN }}
 
     steps:
-      - name: Checkout
-        run: git clone https://$GITHUB_ACTOR:$${{ secrets.REPO_ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY $GITHUB_WORKSPACE
-
       - name: Run experiments
         run: |
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_bottle params.category=bottle
@@ -86,6 +83,7 @@ jobs:
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_transistor params.category=transistor
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_wood params.category=wood
           python run.py ./config.yaml params.tracking_uri=databricks params.experiment_name=/Users/inoue@nablas.com/MVTec params.run_name=PatchCore_zipper params.category=zipper
+        working-directory: /app/PatchCore
 
       - name: Git add, commit, and push
         run: |

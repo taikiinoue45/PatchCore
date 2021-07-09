@@ -1,0 +1,82 @@
+params:
+  device: cuda:0
+  category: bottle
+  normalize_mean: [0.485, 0.456, 0.406]
+  normalize_std: [0.229, 0.224, 0.225]
+  tracking_uri: databricks
+  experiment_name: /Users/inoue@nablas.com/sandbox
+  run_name: PatchCore_${params.category}
+
+model:
+  name: patchcore.models - WideResNet50
+  args:
+
+transform:
+  train:
+    - name: albumentations - Resize
+      args:
+        height: 256
+        width: 256
+        p: 1
+    - name: albumentations - CenterCrop
+      args:
+        height: 224
+        width: 224
+        p: 1
+    - name: albumentations - Normalize
+      args:
+        mean: ${params.normalize_mean}
+        std: ${params.normalize_std}
+        p: 1
+    - name: albumentations.pytorch - ToTensorV2
+      args:
+        p: 1
+  test:
+    - name: albumentations - Resize
+      args:
+        height: 256
+        width: 256
+        p: 1
+    - name: albumentations - CenterCrop
+      args:
+        height: 224
+        width: 224
+        p: 1
+    - name: albumentations - Normalize
+      args:
+        mean: ${params.normalize_mean}
+        std: ${params.normalize_std}
+        p: 1
+    - name: albumentations.pytorch - ToTensorV2
+      args:
+        p: 1
+
+dataset:
+  train:
+    name: mvtec.datasets - MVTecDataset
+    args:
+      data_dir: /data
+      data_type: train
+      category: ${params.category}
+  test:
+    name: mvtec.datasets - MVTecDataset
+    args:
+      data_dir: /data
+      data_type: test
+      category: ${params.category}
+
+dataloader:
+  train:
+    name: torch.utils.data - DataLoader
+    args:
+      batch_size: 4
+      num_workers: 4
+      pin_memory: true
+      shuffle: true
+  test:
+    name: torch.utils.data - DataLoader
+    args:
+      batch_size: 1
+      num_workers: 1
+      pin_memory: true
+      shuffle: true
